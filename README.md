@@ -4,7 +4,7 @@ A wrapper package to run mysqldump from laravel console commands.
 
 ## Installation
 
-### Install from packagist
+### Install from [packagist](https://packagist.org/packages/yadakhov/laradump)
 
 ```
 composer require yadakhov/laradump
@@ -56,7 +56,7 @@ php artisan
 php artisan laradump:mysqldump
 ```
 
-Will create mysqldump files in `/storage/dumps.`
+Will perform a mysqldump of each table in your database and store it in the `storage/dumps` folder.
 
 ### Doing a mysql restore
 
