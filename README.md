@@ -1,4 +1,6 @@
-# Laradump is a mysqldump wrapper for laravel.
+# Laradump 
+
+A wrapper package to run mysqldump from laravel console commands.
 
 ### Install from packagist
 
@@ -11,6 +13,7 @@ composer require yadakhov/laradump
 ```php
     'providers' => [
         // ...others
+
         Yadakhov\Laradump\LaradumpServiceProvider::class,
     ],
 ```

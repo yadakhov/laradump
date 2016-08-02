@@ -19,7 +19,7 @@ class Restore extends Command
     {
         $this->comment('Starting mysql restore...');
 
-        if (!$this->confirm('Do you wish to continue? [yes|no]')) {
+        if (!$this->confirm('If you tables have new data it will be overwritten!  Do you wish to continue?  [yes|no]')) {
             // no
             $this->comment('Exiting...');
 

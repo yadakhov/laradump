@@ -2,6 +2,7 @@
 
 namespace Yadakhov\Laradump\Commands;
 
+use Config;
 use DB;
 use File;
 use Illuminate\Console\Command;
@@ -12,23 +13,42 @@ class MySqlDump extends Command
 
     protected $description = 'Perform a MySQL dump.';
 
+    /**
+     * @var string default database connection
+     */
+    protected $database;
+
+    /**
+     * @var string folder to stored the files
+     */
+    protected $folder;
+
+    /**
+     * MySqlDump constructor.
+     */
+    public function __construct()
+    {
+        $this->database = Config::get('laradump.database', 'mysql');
+        $this->folder = Config::get('laradump.folder', storage_path('dumps'));
+    }
+
     public function handle()
     {
         $this->comment('Starting mysql dump...');
 
-        $configs = config('database.connections.mysql');
+        $configs = config('database.connections.' . $this->database);
         $username = array_get($configs, 'username');
         $password = array_get($configs, 'password');
         $database = array_get($configs, 'database');
 
         $tables = $this->getAllTables();
 
-        File::makeDirectory(storage_path('dumps/'));
+        File::makeDirectory($this->folder);
 
         foreach ($tables as $table) {
-            $file = storage_path('dumps/' . $table . '.sql');
+            $file = $this->folder . '/' . $table . '.sql';
 
-            $command = sprintf('mysqldump -u %s -p%s %s %s --skip-dump-date > %s', $username, $password, $database, $table, storage_path('dumps/' . $table . '.sql'));
+            $command = sprintf('mysqldump -u %s -p%s %s %s --skip-dump-date > %s', $username, $password, $database, $table, $file);
 
             $this->info($command);
 
@@ -43,13 +63,13 @@ class MySqlDump extends Command
      *
      * @return array
      */
-    public static function getAllTables()
+    public function getAllTables()
     {
-        $connection = config('database.default');
-        $databaseName = config('database.connections.' . $connection . '.database');
+        $configs = config('database.connections.' . $this->database);
+        $database = array_get($configs, 'database');
 
         $sql = 'SELECT * FROM information_schema.tables WHERE table_schema = ? ORDER BY TABLE_NAME';
-        $rows = DB::select($sql, [$databaseName]);
+        $rows = DB::select($sql, [$database]);
         $out = [];
 
         foreach ($rows as $row) {
@@ -59,6 +79,12 @@ class MySqlDump extends Command
         return $out;
     }
 
+    /**
+     * Remove the server information from the mysql dump file.
+     * This is done so git won't see any changes if there is no data change.
+     *
+     * @param $file
+     */
     public function removeServerInformation($file)
     {
         $lines = file_get_contents($file);
