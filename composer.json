@@ -1,29 +1,30 @@
 {
     "name": "yadakhov/laradump",
-    "type": "library",
     "description": "A mysqldump wrapper for laravel.  Dump your table schemas and data into files.",
-    "keywords": [
-        "mysql",
-        "mysqldump",
-        "laravel"
-    ],
-    "homepage": "https://github.com/yadakhov/laradump",
     "license": "MIT",
     "authors": [
         {
             "name": "Yada Khov",
-            "email": "yada.khov@gmail.com",
-            "homepage": "http://yadakhov.com"
+            "email": "yada.khov@gmail.com"
         }
     ],
+    "keywords": [
+        "laravel",
+        "mysqldump",
+        "mysql",
+        "migration"
+    ],
+    "homepage": "https://github.com/yadakhov/laradump",
     "require": {
+        "php": ">=5.4.0",
+        "illuminate/support": "~5.0"
     },
     "require-dev": {
         "phpunit/phpunit": "~5.0"
     },
     "autoload": {
         "psr-4": {
-            "Yadakhov\\": "src/"
+            "Yadakhov\\Laradump\\": "src/"
         }
     }
 }
