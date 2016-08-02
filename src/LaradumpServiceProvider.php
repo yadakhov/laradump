@@ -3,6 +3,8 @@
 namespace Yadakhov\Laradump;
 
 use Illuminate\Support\ServiceProvider;
+use Yadakhov\Laradump\Commands\MySqlDump;
+use Yadakhov\Laradump\Commands\Restore;
 
 class LaradumpServiceProvider extends ServiceProvider
 {
@@ -33,7 +35,7 @@ class LaradumpServiceProvider extends ServiceProvider
     private function registerLaradumpMySqlDump()
     {
         $this->app->singleton('commands.laradump.mysqldump', function ($app) {
-            return $app[Yadakhov\Laradump\Commands\MySqlDump::class];
+            return $app[MySqlDump::class];
         });
         $this->commands('commands.laradump.mysqldump');
     }
@@ -44,7 +46,7 @@ class LaradumpServiceProvider extends ServiceProvider
     private function registerLaradumpRestore()
     {
         $this->app->singleton('commands.laradump.restore', function ($app) {
-            return $app[Yadakhov\Laradump\Commands\Restore::class];
+            return $app[Restore::class];
         });
         $this->commands('commands.laradump.restore');
     }
