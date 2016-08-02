@@ -2,6 +2,7 @@
 
 namespace Yadakhov\Laradump\Commands;
 
+use Config;
 use Illuminate\Console\Command;
 
 class Restore extends Command
