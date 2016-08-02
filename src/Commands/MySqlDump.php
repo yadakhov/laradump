@@ -31,6 +31,8 @@ class MySqlDump extends Command
         parent::__construct();
         $this->database = Config::get('laradump.database', 'mysql');
         $this->folder = Config::get('laradump.folder', storage_path('dumps'));
+
+        $this->createFolder();
     }
 
     public function handle()
@@ -43,8 +45,6 @@ class MySqlDump extends Command
         $database = array_get($configs, 'database');
 
         $tables = $this->getAllTables();
-
-        File::makeDirectory($this->folder);
 
         foreach ($tables as $table) {
             $file = $this->folder . '/' . $table . '.sql';
@@ -60,11 +60,21 @@ class MySqlDump extends Command
     }
 
     /**
+     * Create the dump folder.
+     */
+    protected function createFolder()
+    {
+        if (!File::exists($this->folder)) {
+            File::makeDirectory($this->folder);
+        }
+    }
+
+    /**
      * Get all the tables in the database.
      *
      * @return array
      */
-    public function getAllTables()
+    protected function getAllTables()
     {
         $configs = config('database.connections.' . $this->database);
         $database = array_get($configs, 'database');
@@ -86,7 +96,7 @@ class MySqlDump extends Command
      *
      * @param $file
      */
-    public function removeServerInformation($file)
+    protected function removeServerInformation($file)
     {
         $lines = file_get_contents($file);
         $lines = explode("\n", $lines);
