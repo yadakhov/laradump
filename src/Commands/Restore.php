@@ -11,6 +11,26 @@ class Restore extends Command
     protected $description = 'Perform a restore.';
 
     /**
+     * @var string default database connection
+     */
+    protected $database;
+
+    /**
+     * @var string folder to stored the files
+     */
+    protected $folder;
+
+    /**
+     * MySqlDump constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->database = Config::get('laradump.database', 'mysql');
+        $this->folder = Config::get('laradump.folder', storage_path('dumps'));
+    }
+
+    /**
      * Execute the console command.
      *
      * @return mixed
@@ -26,7 +46,7 @@ class Restore extends Command
             return;
         }
 
-        $configs = config('database.connections.mysql');
+        $configs = config('database.connections.' . $this->database);
         $username = array_get($configs, 'username');
         $password = array_get($configs, 'password');
         $database = array_get($configs, 'database');
@@ -49,15 +69,13 @@ class Restore extends Command
      */
     protected function getDumpFiles()
     {
-        $dir = storage_path('dumps');
-
         // Scan the directory for files.
-        $files = scandir($dir);
+        $files = scandir($this->folder);
 
         $out = [];
         foreach ($files as $file) {
             if (ends_with($file, '.sql')) {
-                $out[] = $dir . '/' . $file;
+                $out[] = $this->folder . '/' . $file;
             }
         }
 

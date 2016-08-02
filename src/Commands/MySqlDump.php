@@ -28,6 +28,7 @@ class MySqlDump extends Command
      */
     public function __construct()
     {
+        parent::__construct();
         $this->database = Config::get('laradump.database', 'mysql');
         $this->folder = Config::get('laradump.folder', storage_path('dumps'));
     }
