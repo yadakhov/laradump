@@ -2,6 +2,8 @@
 
 namespace Yadakhov\Laradump\Commands;
 
+use DB;
+use File;
 use Illuminate\Console\Command;
 
 class MySqlDump extends Command
@@ -20,6 +22,8 @@ class MySqlDump extends Command
         $database = array_get($configs, 'database');
 
         $tables = $this->getAllTables();
+
+        File::makeDirectory(storage_path('dumps/'));
 
         foreach ($tables as $table) {
             $file = storage_path('dumps/' . $table . '.sql');

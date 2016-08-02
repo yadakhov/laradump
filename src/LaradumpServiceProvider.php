@@ -15,7 +15,13 @@ class LaradumpServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        $configPath = __DIR__ . '/../config/laradump.php';
+        if (function_exists('config_path')) {
+            $publishPath = config_path('laradump.php');
+        } else {
+            $publishPath = base_path('config/laradump.php');
+        }
+        $this->publishes([$configPath => $publishPath], 'config');
     }
 
     /**
