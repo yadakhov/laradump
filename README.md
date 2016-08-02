@@ -10,6 +10,14 @@ A wrapper package to run mysqldump from laravel console commands.
 composer require yadakhov/laradump
 ```
 
+Or add to your composer.json
+
+```
+    "require": {
+        "yadakhov/laradump": "^1.0"
+    },
+```
+
 ### Add to providers array in `config/app.php`
 
 ```php
