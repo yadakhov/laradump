@@ -12,10 +12,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Folder
+    | Table Folder
     |--------------------------------------------------------------------------
     |
-    | Where to store the dump files.
+    | Where to store the table files.
     */
-    'folder' => storage_path('dumps'),
+    'table_folder' => storage_path('laradump/tables'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Data Folder
+    |--------------------------------------------------------------------------
+    |
+    | Where to store the data files.
+    */
+    'data_folder' => storage_path('laradump/data'),
 ];

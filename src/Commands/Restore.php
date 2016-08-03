@@ -12,14 +12,14 @@ class Restore extends Command
     protected $description = 'Perform a restore.';
 
     /**
-     * @var string default database connection
+     * @var string folder to store table.
      */
-    protected $database;
+    protected $tableFolder;
 
     /**
-     * @var string folder to stored the files
+     * @var string folder to store the data.
      */
-    protected $folder;
+    protected $dataFolder;
 
     /**
      * MySqlDump constructor.
@@ -28,7 +28,8 @@ class Restore extends Command
     {
         parent::__construct();
         $this->database = Config::get('laradump.database', 'mysql');
-        $this->folder = Config::get('laradump.folder', storage_path('dumps'));
+        $this->tableFolder = Config::get('laradump.table_folder', storage_path('laradump/tables'));
+        $this->dataFolder = Config::get('laradump.data_folder', storage_path('laradump/data'));
     }
 
     /**
@@ -51,35 +52,56 @@ class Restore extends Command
         $username = array_get($configs, 'username');
         $password = array_get($configs, 'password');
         $database = array_get($configs, 'database');
+        $host = array_get($configs, 'host');
 
-        $files = $this->getDumpFiles();
+        $this->info('Loading table schemas...');
+        $tableFiles = $this->getFiles($this->tableFolder);
+        foreach ($tableFiles as $file) {
+            // Load the table
+            $command = sprintf('mysql -u %s -p%s -h %s %s < %s', $username, $password, $host, $database, $file);
+            $this->info($this->removePasswordFromCommand($command));
+            exec($command);
+        }
 
-        foreach ($files as $file) {
-            $command = sprintf('mysql -u %s -p%s %s < %s', $username, $password, $database, $file);
-
-            $this->info($command);
-
+        $this->info('Loading data for each table...');
+        $dataFiles = $this->getFiles($this->dataFolder);
+        foreach ($dataFiles as $file) {
+            // Load the table
+            $command = sprintf('mysql -u %s -p%s -h %s %s < %s', $username, $password, $host, $database, $file);
+            $this->info($this->removePasswordFromCommand($command));
             exec($command);
         }
     }
 
     /**
-     * Get all dump files files.
+     * Get all table schema files.
      *
      * @return array
      */
-    protected function getDumpFiles()
+    protected function getFiles($folder)
     {
         // Scan the directory for files.
-        $files = scandir($this->folder);
+        $files = scandir($folder);
 
         $out = [];
         foreach ($files as $file) {
             if (ends_with($file, '.sql')) {
-                $out[] = $this->folder . '/' . $file;
+                $out[] = $folder . '/' . $file;
             }
         }
 
         return $out;
+    }
+
+    /**
+     * Remove the -ppassword with -p***
+     *
+     * @param $command
+     *
+     * @return mixed
+     */
+    protected function removePasswordFromCommand($command)
+    {
+        return preg_replace('/-p.* /', '-p**** ', $command) ;
     }
 }

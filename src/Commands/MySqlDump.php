@@ -19,9 +19,14 @@ class MySqlDump extends Command
     protected $database;
 
     /**
-     * @var string folder to stored the files
+     * @var string folder to store table.
      */
-    protected $folder;
+    protected $tableFolder;
+
+    /**
+     * @var string folder to store the data.
+     */
+    protected $dataFolder;
 
     /**
      * MySqlDump constructor.
@@ -30,42 +35,52 @@ class MySqlDump extends Command
     {
         parent::__construct();
         $this->database = Config::get('laradump.database', 'mysql');
-        $this->folder = Config::get('laradump.folder', storage_path('dumps'));
-
-        $this->createFolder();
+        $this->tableFolder = Config::get('laradump.table_folder', storage_path('laradump/tables'));
+        $this->dataFolder = Config::get('laradump.data_folder', storage_path('laradump/data'));
     }
 
     public function handle()
     {
         $this->comment('Starting mysql dump...');
 
+        $this->createFolders();
+
         $configs = config('database.connections.' . $this->database);
         $username = array_get($configs, 'username');
         $password = array_get($configs, 'password');
         $database = array_get($configs, 'database');
+        $host = array_get($configs, 'host');
 
         $tables = $this->getAllTables();
 
         foreach ($tables as $table) {
-            $file = $this->folder . '/' . $table . '.sql';
+            $tableFile = $this->tableFolder . '/' . $table . '.sql';
+            $dataFile = $this->dataFolder . '/' . $table . '.sql';
 
-            $command = sprintf('mysqldump -u %s -p%s %s %s --skip-dump-date > %s', $username, $password, $database, $table, $file);
-
-            $this->info($command);
-
+            // Dump the table schema
+            $command = sprintf('mysqldump -u %s -p%s %s -h %s %s --skip-dump-date --no-data > %s', $username, $password, $database, $host, $table, $tableFile);
+            $this->info($this->removePasswordFromCommand($command));
             exec($command);
+            $this->removeServerInformation($tableFile);
 
-            $this->removeServerInformation($file);
+            // Dump the table schema
+            $command = sprintf('mysqldump -u %s -p%s %s -h %s %s --skip-dump-date --no-data > %s', $username, $password, $database, $host, $table, $dataFile);
+            $this->info($this->removePasswordFromCommand($command));
+            exec($command);
+            $this->removeServerInformation($dataFile);
         }
     }
 
     /**
      * Create the dump folder.
      */
-    protected function createFolder()
+    protected function createFolders()
     {
-        if (!File::exists($this->folder)) {
-            File::makeDirectory($this->folder);
+        if (!File::exists($this->tableFolder)) {
+            File::makeDirectory($this->tableFolder, null, true);
+        }
+        if (!File::exists($this->dataFolder)) {
+            File::makeDirectory($this->dataFolder, null, true);
         }
     }
 
@@ -114,5 +129,17 @@ class MySqlDump extends Command
         $lines = implode("\n", $lines);
 
         file_put_contents($file, $lines);
+    }
+
+    /**
+     * Remove the -ppassword with -p***
+     *
+     * @param $command
+     *
+     * @return mixed
+     */
+    protected function removePasswordFromCommand($command)
+    {
+        return preg_replace('/-p.* /', '-p**** ', $command) ;
     }
 }
