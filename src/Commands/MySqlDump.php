@@ -58,13 +58,13 @@ class MySqlDump extends Command
             $dataFile = $this->dataFolder . '/' . $table . '.sql';
 
             // Dump the table schema
-            $command = sprintf('mysqldump -u %s -p%s %s -h %s %s --skip-dump-date --no-data > %s', $username, $password, $database, $host, $table, $tableFile);
+            $command = sprintf('mysqldump -u %s -p%s %s -h %s %s --no-data > %s', $username, $password, $database, $host, $table, $tableFile);
             $this->info($this->removePasswordFromCommand($command));
             exec($command);
             $this->removeServerInformation($tableFile);
 
-            // Dump the table schema
-            $command = sprintf('mysqldump -u %s -p%s %s -h %s %s --skip-dump-date --no-data > %s', $username, $password, $database, $host, $table, $dataFile);
+            // Dump the data
+            $command = sprintf('mysqldump -u %s -p%s %s -h %s %s --skip-dump-date --extended-insert > %s', $username, $password, $database, $host, $table, $dataFile);
             $this->info($this->removePasswordFromCommand($command));
             exec($command);
             $this->removeServerInformation($dataFile);
