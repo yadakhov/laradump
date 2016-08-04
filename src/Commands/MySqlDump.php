@@ -58,16 +58,14 @@ class MySqlDump extends Command
             $dataFile = $this->dataFolder . '/' . $table . '.sql';
 
             // Dump the table schema
-            $command = sprintf('mysqldump -u %s -p%s %s -h %s %s --no-data > %s', $username, $password, $database, $host, $table, $tableFile);
+            $command = sprintf('mysqldump -u %s -p%s %s -h %s %s --no-data --skip-comments > %s', $username, $password, $database, $host, $table, $tableFile);
             $this->info($this->removePasswordFromCommand($command));
             exec($command);
-            $this->removeServerInformation($tableFile);
 
             // Dump the data
-            $command = sprintf('mysqldump -u %s -p%s %s -h %s %s --skip-dump-date --extended-insert > %s', $username, $password, $database, $host, $table, $dataFile);
+            $command = sprintf('mysqldump -u %s -p%s %s -h %s %s --skip-dump-date --extended-insert --skip-comments > %s', $username, $password, $database, $host, $table, $dataFile);
             $this->info($this->removePasswordFromCommand($command));
             exec($command);
-            $this->removeServerInformation($dataFile);
         }
     }
 
@@ -103,32 +101,6 @@ class MySqlDump extends Command
         }
 
         return $out;
-    }
-
-    /**
-     * Remove the server information from the mysql dump file.
-     * This is done so git won't see any changes if there is no data change.
-     *
-     * @param $file
-     */
-    protected function removeServerInformation($file)
-    {
-        $lines = file_get_contents($file);
-        $lines = explode("\n", $lines);
-
-        foreach ($lines as $key => $line) {
-            if (strpos($line, '-- MySQL dump') === 0) {
-                unset($lines[$key]);
-            }
-            if (strpos($line, '-- Server version') === 0) {
-                unset($lines[$key]);
-                break;
-            }
-        }
-
-        $lines = implode("\n", $lines);
-
-        file_put_contents($file, $lines);
     }
 
     /**
