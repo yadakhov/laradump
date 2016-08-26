@@ -66,8 +66,9 @@ php artisan laradump:restore
 
 Will load all sql files in `/storage/dumps.`
 
-#### Ensure the storage folder is writable.
+####Ensure the storage folder is writable.
 
 ```
+mkdir storage/laradump
 chmod o+w -R storage
 ```
