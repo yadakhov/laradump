@@ -69,6 +69,9 @@ Will load all sql files in `/storage/dumps.`
 ####Ensure the storage folder is writable.
 
 ```
-mkdir storage/laradump
-chmod o+w -R storage
+# Create the tables for storing the files
+mkdir storage/laradump/tables
+mkdir storage/laradump/data
+
+sudo chmod o+w -R storage
 ```
