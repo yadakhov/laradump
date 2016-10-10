@@ -58,7 +58,7 @@ class MySqlDump extends Command
             $dataFile = $this->dataFolder . '/' . $table . '.sql';
 
             // Dump the table schema
-            $command = sprintf('mysqldump -u %s -p%s %s -h %s %s --no-data --skip-comments > %s', $username, $password, $database, $host, $table, $tableFile);
+            $command = sprintf("mysqldump -u %s -p%s %s -h %s %s --no-data --skip-comments | sed 's/ AUTO_INCREMENT=[0-9]*\\b//' > %s", $username, $password, $database, $host, $table, $tableFile);
             $this->info($this->removePasswordFromCommand($command));
             exec($command);
 
@@ -75,10 +75,10 @@ class MySqlDump extends Command
     protected function createFolders()
     {
         if (!File::exists($this->tableFolder)) {
-            File::makeDirectory($this->tableFolder, null, true);
+            File::makeDirectory($this->tableFolder, 0775, true);
         }
         if (!File::exists($this->dataFolder)) {
-            File::makeDirectory($this->dataFolder, null, true);
+            File::makeDirectory($this->dataFolder, 0775, true);
         }
     }
 
