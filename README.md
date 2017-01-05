@@ -45,6 +45,7 @@ php artisan
 ```bash
  ...
  laradump
+  laradump:list       List all tables to perform individually.
   laradump:mysqldump  Perform a MySQL dump.
   laradump:restore    Perform a restore.
  ...
@@ -66,7 +67,17 @@ php artisan laradump:restore
 
 Will load all sql files in `/storage/dumps.`
 
-####Ensure the storage folder is writable.
+### Perform backup and restore on individual table
+
+```
+php artisan laradump:mysqldump  --table=user
+php artisan laradump:restore  --table=user
+
+# To see a list of possible tables
+php artisan laradump:list 
+```
+
+### Ensure the storage folder is writable.
 
 ```
 # Create the tables for storing the files

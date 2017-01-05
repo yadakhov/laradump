@@ -2,16 +2,15 @@
 
 namespace Yadakhov\Laradump\Commands;
 
-use Config;
 use DB;
 use File;
 use Illuminate\Console\Command;
 
 class MySqlDump extends Command
 {
-    protected $signature = 'laradump:mysqldump';
+    protected $signature = 'laradump:mysqldump {--table=}';
 
-    protected $description = 'Perform a MySQL dump.';
+    protected $description = 'Perform a MySQL dump on every tables.';
 
     /**
      * @var string default database connection
@@ -34,9 +33,9 @@ class MySqlDump extends Command
     public function __construct()
     {
         parent::__construct();
-        $this->database = Config::get('laradump.database', 'mysql');
-        $this->tableFolder = Config::get('laradump.table_folder', storage_path('laradump/tables'));
-        $this->dataFolder = Config::get('laradump.data_folder', storage_path('laradump/data'));
+        $this->database = config('laradump.database', 'mysql');
+        $this->tableFolder = config('laradump.table_folder', storage_path('laradump/tables'));
+        $this->dataFolder = config('laradump.data_folder', storage_path('laradump/data'));
     }
 
     public function handle()
@@ -51,7 +50,13 @@ class MySqlDump extends Command
         $database = array_get($configs, 'database');
         $host = array_get($configs, 'host');
 
-        $tables = $this->getAllTables();
+        $table = $this->option('table');
+
+        if (strlen($table) > 0) {
+            $tables  = [$table];
+        } else {
+            $tables = $this->getAllTables();
+        }
 
         foreach ($tables as $table) {
             $tableFile = $this->tableFolder . '/' . $table . '.sql';

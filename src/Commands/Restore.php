@@ -2,14 +2,13 @@
 
 namespace Yadakhov\Laradump\Commands;
 
-use Config;
 use Illuminate\Console\Command;
 
 class Restore extends Command
 {
-    protected $signature = 'laradump:restore';
+    protected $signature = 'laradump:restore {--table=}';
 
-    protected $description = 'Perform a restore.';
+    protected $description = 'Perform a restore on every tables.';
 
     /**
      * @var string folder to store table.
@@ -27,9 +26,9 @@ class Restore extends Command
     public function __construct()
     {
         parent::__construct();
-        $this->database = Config::get('laradump.database', 'mysql');
-        $this->tableFolder = Config::get('laradump.table_folder', storage_path('laradump/tables'));
-        $this->dataFolder = Config::get('laradump.data_folder', storage_path('laradump/data'));
+        $this->database = config('laradump.database', 'mysql');
+        $this->tableFolder = config('laradump.table_folder', storage_path('laradump/tables'));
+        $this->dataFolder = config('laradump.data_folder', storage_path('laradump/data'));
     }
 
     /**
@@ -80,6 +79,12 @@ class Restore extends Command
      */
     protected function getFiles($folder)
     {
+        // if the user pass in the table just use it.
+        $table = $this->option('table');
+        if (strlen($table) > 0) {
+            return [$folder . '/' . $table . '.sql'];
+        }
+
         // Scan the directory for files.
         $files = scandir($folder);
 
