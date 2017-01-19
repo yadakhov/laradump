@@ -27,4 +27,12 @@ return [
     | Where to store the data files.
     */
     'data_folder' => storage_path('laradump/data'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Remove auto increment
+    |--------------------------------------------------------------------------
+    | Remove auto increment from CREATE TABLE ... AUTO_INCREMENT=1000
+    */
+    'remove_auto_increment' => true,
 ];
