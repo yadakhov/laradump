@@ -3,6 +3,7 @@
 namespace Yadakhov\Laradump;
 
 use Illuminate\Support\ServiceProvider;
+use Yadakhov\Laradump\Commands\DropTables;
 use Yadakhov\Laradump\Commands\ListTables;
 use Yadakhov\Laradump\Commands\MySqlDump;
 use Yadakhov\Laradump\Commands\Restore;
@@ -35,6 +36,7 @@ class LaradumpServiceProvider extends ServiceProvider
         $this->registerLaradumpMySqlDump();
         $this->registerLaradumpRestore();
         $this->registerListTables();
+        $this->registerDropTables();
     }
 
     /**
@@ -68,5 +70,16 @@ class LaradumpServiceProvider extends ServiceProvider
             return $app[ListTables::class];
         });
         $this->commands('commands.laradump.list-tables');
+    }
+
+    /**
+     * Register the laradump:drop-tables command.
+     */
+    private function registerDropTables()
+    {
+        $this->app->singleton('commands.laradump.drop-tables', function ($app) {
+            return $app[DropTables::class];
+        });
+        $this->commands('commands.laradump.drop-tables');
     }
 }
