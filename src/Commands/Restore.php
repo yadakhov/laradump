@@ -79,7 +79,7 @@ class Restore extends Command
         $yes = $this->option('yes');
 
         if (!empty($yes)) {
-            if (!$this->confirm('If your tables have new data it will be overwritten!  Do you want to continue?') && ) {
+            if (!$this->confirm('If your tables have new data it will be overwritten!  Do you want to continue?')) {
                 // no
                 $this->comment('Exiting...');
 
