@@ -6,7 +6,9 @@ use Illuminate\Console\Command;
 
 class Restore extends Command
 {
-    protected $signature = 'laradump:restore {--table=}';
+    protected $signature = 'laradump:restore 
+                            {--table= : Table name}
+                            {--yes= : accept confirm question}';
 
     protected $description = 'Perform a restore on every tables.';
 
@@ -39,13 +41,6 @@ class Restore extends Command
     public function handle()
     {
         $this->comment('Starting mysql restore...');
-
-        if (!$this->confirm('If your tables have new data it will be overwritten!  Do you want to continue?')) {
-            // no
-            $this->comment('Exiting...');
-
-            return;
-        }
 
         $configs = config('database.connections.' . $this->database);
         $username = array_get($configs, 'username');
@@ -81,6 +76,17 @@ class Restore extends Command
     {
         // if the user pass in the table just use it.
         $table = $this->option('table');
+        $yes = $this->option('yes');
+
+        if (!empty($yes)) {
+            if (!$this->confirm('If your tables have new data it will be overwritten!  Do you want to continue?') && ) {
+                // no
+                $this->comment('Exiting...');
+
+                return;
+            }
+        }
+
         if (strlen($table) > 0) {
             return [$folder . '/' . $table . '.sql'];
         }
