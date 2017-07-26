@@ -43,7 +43,9 @@ class ListTables extends Command
 
         $this->info('List of table you can restore:');
 
-        $files = $this->getFiles($this->tableFolder);
+        $allFiles = $this->getFiles($this->tableFolder);
+
+        $files = array_diff($allFiles, $tables);
 
         foreach ($files as $file) {
             $this->comment('php artisan laradump:restore --table=' . $file);
