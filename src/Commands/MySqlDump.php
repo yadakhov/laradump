@@ -63,9 +63,9 @@ class MySqlDump extends Command
             $dataFile = $this->dataFolder . '/' . $table . '.sql';
 
             if (config('laradump.remove_auto_increment', true)) {
-                $dumpCommand = "mysqldump -u %s -p%s %s -h %s %s --no-data --skip-comments | sed 's/ AUTO_INCREMENT=[0-9]*\\b//' > %s";
+                $dumpCommand = "mysqldump -u %s -p'%s' %s -h %s %s --no-data --skip-comments | sed 's/ AUTO_INCREMENT=[0-9]*\\b//' > %s";
             } else {
-                $dumpCommand = 'mysqldump -u %s -p%s %s -h %s %s --no-data --skip-comments > %s';
+                $dumpCommand = 'mysqldump -u %s -p\'%s\' %s -h %s %s --no-data --skip-comments > %s';
             }
 
             // Dump the table schema
