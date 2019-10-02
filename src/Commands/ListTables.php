@@ -5,6 +5,7 @@ namespace Yadakhov\Laradump\Commands;
 use DB;
 use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 
 class ListTables extends Command
 {
@@ -86,7 +87,7 @@ class ListTables extends Command
 
         $out = [];
         foreach ($files as $file) {
-            if (ends_with($file, '.sql')) {
+            if (Str::endsWith($file, '.sql')) {
                 // remove the .sql
                 $file = substr($file, 0, -4);
                 $out[] = $file;
