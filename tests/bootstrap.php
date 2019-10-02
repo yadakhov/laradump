@@ -2,7 +2,7 @@
 
 require __DIR__ . '/../vendor/autoload.php';
 
-class BootstrapTest extends \PHPUnit_Framework_TestCase
+class BootstrapTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * Call protected/private method of a class.
@@ -12,6 +12,7 @@ class BootstrapTest extends \PHPUnit_Framework_TestCase
      * @param array  $parameters Array of parameters to pass into method.
      *
      * @return mixed Method return.
+     * @throws ReflectionException
      */
     public function invokeMethod(&$object, $methodName, array $parameters = [])
     {

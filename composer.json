@@ -16,11 +16,11 @@
     ],
     "homepage": "https://github.com/yadakhov/laradump",
     "require": {
-        "php": ">=5.4.0",
-        "illuminate/support": "~5.0"
+        "php": "^7.2",
+        "illuminate/support": "~6.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "~5.0"
+        "phpunit/phpunit": "^8.0"
     },
     "autoload": {
         "psr-4": {
