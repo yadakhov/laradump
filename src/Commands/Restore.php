@@ -3,6 +3,7 @@
 namespace Yadakhov\Laradump\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Arr;
 
 class Restore extends Command
 {
@@ -43,10 +44,10 @@ class Restore extends Command
         $this->comment('Starting mysql restore...');
 
         $configs = config('database.connections.' . $this->database);
-        $username = array_get($configs, 'username');
-        $password = array_get($configs, 'password');
-        $database = array_get($configs, 'database');
-        $host = array_get($configs, 'host');
+        $username = Arr::get($configs, 'username');
+        $password = Arr::get($configs, 'password');
+        $database = Arr::get($configs, 'database');
+        $host = Arr::get($configs, 'host');
 
         $this->info('Loading table schemas...');
         $tableFiles = $this->getFiles($this->tableFolder);

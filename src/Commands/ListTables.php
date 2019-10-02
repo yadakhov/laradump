@@ -4,6 +4,7 @@ namespace Yadakhov\Laradump\Commands;
 
 use DB;
 use Illuminate\Console\Command;
+use Illuminate\Support\Arr;
 
 class ListTables extends Command
 {
@@ -60,7 +61,7 @@ class ListTables extends Command
         $sql = 'SELECT TABLE_NAME FROM information_schema.tables WHERE table_schema = ?';
 
         $configs = config('database.connections.' . $this->database);
-        $database = array_get($configs, 'database');
+        $database = Arr::get($configs, 'database');
 
         $rows = DB::select($sql, [$database]);
 

@@ -5,6 +5,7 @@ namespace Yadakhov\Laradump\Commands;
 use DB;
 use File;
 use Illuminate\Console\Command;
+use Illuminate\Support\Arr;
 
 class MySqlDump extends Command
 {
@@ -45,10 +46,10 @@ class MySqlDump extends Command
         $this->createFolders();
 
         $configs = config('database.connections.' . $this->database);
-        $username = array_get($configs, 'username');
-        $password = array_get($configs, 'password');
-        $database = array_get($configs, 'database');
-        $host = array_get($configs, 'host');
+        $username = Arr::get($configs, 'username');
+        $password = Arr::get($configs, 'password');
+        $database = Arr::get($configs, 'database');
+        $host = Arr::get($configs, 'host');
 
         $table = $this->option('table');
 
@@ -101,7 +102,7 @@ class MySqlDump extends Command
     protected function getAllTables()
     {
         $configs = config('database.connections.' . $this->database);
-        $database = array_get($configs, 'database');
+        $database = Arr::get($configs, 'database');
 
         $sql = 'SELECT * FROM information_schema.tables WHERE table_schema = ? ORDER BY TABLE_NAME';
         $rows = DB::select($sql, [$database]);
