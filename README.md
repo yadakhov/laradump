@@ -14,7 +14,7 @@ Or add to your composer.json
 
 ```
     "require": {
-        "yadakhov/laradump": "^1.0"
+        "yadakhov/laradump": "dev-master"
     },
 ```
 

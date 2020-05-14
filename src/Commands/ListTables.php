@@ -61,7 +61,7 @@ class ListTables extends Command
         $sql = 'SELECT TABLE_NAME FROM information_schema.tables WHERE table_schema = ?';
 
         $configs = config('database.connections.' . $this->database);
-        $database = Utility::get($configs, 'database')
+        $database = Utility::get($configs, 'database');
 
         $rows = DB::select($sql, [$database]);
 
