@@ -5,40 +5,15 @@ namespace Yadakhov\Laradump;
 class Utility
 {
     /**
-     * Get an item from an array using "dot" notation.
-     * https://github.com/illuminate/collections/blob/master/Arr.php
-     * @param  \ArrayAccess|array  $array
-     * @param  string|int|null  $key
-     * @param  mixed  $default
-     * @return mixed
+     * Safe get array by key
      */
     public static function get($array, $key, $default = null)
     {
-        if (! static::accessible($array)) {
-            return Util::value($default);
+        if (!isset($array[$key])) {
+            return $default;
         }
 
-        if (is_null($key)) {
-            return $array;
-        }
-
-        if (static::exists($array, $key)) {
-            return $array[$key];
-        }
-
-        if (strpos($key, '.') === false) {
-            return $array[$key] ?? Util::value($default);
-        }
-
-        foreach (explode('.', $key) as $segment) {
-            if (static::accessible($array) && static::exists($array, $segment)) {
-                $array = $array[$segment];
-            } else {
-                return Util::value($default);
-            }
-        }
-
-        return $array;
+        return $array[$key];
     }
 
     /**
