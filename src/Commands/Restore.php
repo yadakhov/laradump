@@ -3,8 +3,7 @@
 namespace Yadakhov\Laradump\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
+use Yadakhov\Laradump\Utility;
 
 class Restore extends Command
 {
@@ -45,10 +44,10 @@ class Restore extends Command
         $this->comment('Starting mysql restore...');
 
         $configs = config('database.connections.' . $this->database);
-        $username = Arr::get($configs, 'username');
-        $password = Arr::get($configs, 'password');
-        $database = Arr::get($configs, 'database');
-        $host = Arr::get($configs, 'host');
+        $username = Utility::get($configs, 'username');
+        $password = Utility::get($configs, 'password');
+        $database = Utility::get($configs, 'database');
+        $host = Utility::get($configs, 'host');
 
         $this->info('Loading table schemas...');
         $tableFiles = $this->getFiles($this->tableFolder);
@@ -98,7 +97,7 @@ class Restore extends Command
 
         $out = [];
         foreach ($files as $file) {
-            if (Str::endsWith($file, '.sql')) {
+            if (Utility::endsWith($file, '.sql')) {
                 $out[] = $folder . '/' . $file;
             }
         }

@@ -4,8 +4,7 @@ namespace Yadakhov\Laradump\Commands;
 
 use DB;
 use Illuminate\Console\Command;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
+use Yadakhov\Laradump\Utility;
 
 class ListTables extends Command
 {
@@ -62,7 +61,7 @@ class ListTables extends Command
         $sql = 'SELECT TABLE_NAME FROM information_schema.tables WHERE table_schema = ?';
 
         $configs = config('database.connections.' . $this->database);
-        $database = Arr::get($configs, 'database');
+        $database = Utility::get($configs, 'database')
 
         $rows = DB::select($sql, [$database]);
 
@@ -87,7 +86,7 @@ class ListTables extends Command
 
         $out = [];
         foreach ($files as $file) {
-            if (Str::endsWith($file, '.sql')) {
+            if (Utility::endsWith($file, '.sql')) {
                 // remove the .sql
                 $file = substr($file, 0, -4);
                 $out[] = $file;
