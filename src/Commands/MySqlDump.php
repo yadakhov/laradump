@@ -75,7 +75,8 @@ class MySqlDump extends Command
             exec($command);
 
             // Dump the data
-            $command = sprintf('mysqldump -u %s -p%s %s -h %s %s --no-create-info --extended-insert --skip-comments > %s', $username, $password, $database, $host, $table, $dataFile);
+            $command = sprintf("mysqldump -u %s -p'%s' %s -h %s %s --no-create-info --extended-insert --skip-comments > %s", $username, $password, $database, $host, $table, $dataFile);
+ 
             $this->info($this->removePasswordFromCommand($command));
             exec($command);
         }
