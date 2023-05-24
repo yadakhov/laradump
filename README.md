@@ -86,3 +86,10 @@ mkdir storage/laradump/data
 
 sudo chmod o+w -R storage
 ```
+
+### Got ignore the dump files in git
+
+```
+# add line to your .gitignore
+/storage/laradump
+```
