@@ -10,14 +10,6 @@ A wrapper package to run mysqldump from laravel console commands.
 composer require yadakhov/laradump
 ```
 
-Or add to your composer.json
-
-```
-    "require": {
-        "yadakhov/laradump": "dev-master"
-    },
-```
-
 ### Add to providers array in `config/app.php`
 
 ```php
@@ -45,9 +37,12 @@ php artisan
 ```bash
  ...
  laradump
-  laradump:list       List all tables to perform individually.
-  laradump:mysqldump  Perform a MySQL dump.
-  laradump:restore    Perform a restore.
+  laradump:drop-tables        Drop tables that do not have backup files.
+  laradump:list               List all tables to perform individually.
+  laradump:mysqldump          Perform a MySQL dump on every tables.
+  laradump:restore            Perform a restore on every tables.
+  laradump:save-to-s3         Save laradump folder to s3
+  laradump:sync-from-s3       Sync laradump folder from s3
  ...
 ```
 
@@ -87,7 +82,7 @@ mkdir storage/laradump/data
 sudo chmod o+w -R storage
 ```
 
-### Got ignore the dump files in git
+### Add ignore the dump files in git
 
 ```
 # add line to your .gitignore
