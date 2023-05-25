@@ -1,7 +1,5 @@
 <?php
 
-use Illuminate\Support\Str;
-
 return [
     /*
     |--------------------------------------------------------------------------
@@ -44,5 +42,5 @@ return [
     |--------------------------------------------------------------------------
     | S3 prefix path to store the files without leading or trailing slashes.
     */
-    's3_prefix' => 'laradump/' . Str::slug(env('APP_NAME', 'laravel')),
+    's3_prefix' => 'laradump/' .  \Illuminate\Support\Str::slug(env('APP_NAME', 'laravel')),
 ];
