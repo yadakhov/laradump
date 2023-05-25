@@ -39,6 +39,8 @@ class LaradumpServiceProvider extends ServiceProvider
         $this->registerLaradumpRestore();
         $this->registerListTables();
         $this->registerDropTables();
+        $this->registerSaveToS3();
+        $this->registerSyncFromS3();
     }
 
     /**
