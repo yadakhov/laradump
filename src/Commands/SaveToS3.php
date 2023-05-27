@@ -51,8 +51,8 @@ class SaveToS3 extends Command
             $s3Path = $this->s3Prefix . '/' . $relativePath;
 
             $this->info("Saving file {$relativePath} to {$s3Path}");
-            $fileContents = file_get_contents($file);
-            Storage::disk('s3')->put($s3Path, $fileContents);
+            $fileStream = fopen($file, 'r');
+            Storage::disk('s3')->put($s3Path, $fileStream);
         }
     }
 }
