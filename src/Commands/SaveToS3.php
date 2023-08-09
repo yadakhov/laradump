@@ -41,10 +41,9 @@ class SaveToS3 extends Command
     {
         $this->comment('Saving laradump folder to s3...');
 
-        $files = array_merge(
-            glob($this->tableFolder . '/*'),
-            glob($this->dataFolder . '/*'),
-        );
+        $filesTableFolder = glob($this->tableFolder . '/*');
+        $filesDateFolder = glob($this->dataFolder . '/*');
+        $files = array_merge($filesTableFolder, $filesDateFolder);
 
         foreach ($files as $file) {
             $relativePath = basename(dirname($file)) . '/' . basename($file);
